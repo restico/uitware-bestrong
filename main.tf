@@ -19,6 +19,7 @@ module "app-service" {
 
   web-app-name      = "uitware-tflab-web-app"
   web-app-subnet-id = module.networking.subnet_id
+  db-subnet-id      = module.networking.db_subnet_id
 
   tenant-id = var.tenant-id
 }
@@ -32,5 +33,5 @@ module "database" {
   sql_server_login    = var.sql-server-user
   sql_server_password = var.sql-server-password
 
-  web-app-subnet-id = module.networking.subnet_id
+  db-subnet-id = module.networking.db_subnet_id
 }

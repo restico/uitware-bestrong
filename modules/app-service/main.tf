@@ -10,7 +10,7 @@ resource "azurerm_private_endpoint" "storage_private_endpoint" {
   name                = "storage-endpoint"
   location            = var.az_region
   resource_group_name = var.az_rg_name
-  subnet_id           = var.web-app-subnet-id
+  subnet_id           = var.db-subnet-id
 
   private_service_connection {
     name                           = "storage-connection"
@@ -49,7 +49,10 @@ resource "azurerm_linux_web_app" "linux-web-app" {
   }
 
   app_settings = {
-    "APP_INSIGHTS_INSTRUMENTATION_KEY" = azurerm_application_insights.web-app-insights.instrumentation_key
+    "APP_INSIGHTS_INSTRUMENTATION_KEY"           = azurerm_application_insights.web-app-insights.instrumentation_key
+    "APPLICATIONINSIGHTS_CONNECTION_STRING"      = azurerm_application_insights.web-app-insights.connection_string
+    "ApplicationInsightsAgent_EXTENSION_VERSION" = "~3"
+
   }
 
   storage_account {
@@ -64,11 +67,24 @@ resource "azurerm_linux_web_app" "linux-web-app" {
   virtual_network_subnet_id = var.web-app-subnet-id
 }
 
+resource "azurerm_log_analytics_workspace" "web-app-logs-workspace" {
+  name                = "web-app-logs-workspace"
+  location            = var.az_region
+  resource_group_name = var.az_rg_name
+  sku                 = "PerGB2018"
+}
+
 resource "azurerm_application_insights" "web-app-insights" {
   name                = "${var.web-app-name}-insights"
   location            = var.az_region
   resource_group_name = var.az_rg_name
+  workspace_id        = azurerm_log_analytics_workspace.web-app-logs-workspace.id
   application_type    = "web"
+}
+
+resource "azurerm_app_service_virtual_network_swift_connection" "webapp-vnet-integration" {
+  app_service_id = azurerm_linux_web_app.linux-web-app.id
+  subnet_id      = var.web-app-subnet-id
 }
 
 resource "azurerm_container_registry" "container-registry" {
@@ -85,7 +101,7 @@ resource "azurerm_role_assignment" "web-service-acr-pull" {
 }
 
 resource "azurerm_key_vault" "key-vault" {
-  name                = "examplekvor13"
+  name                = "key-vault-for-lab"
   location            = var.az_region
   resource_group_name = var.az_rg_name
   sku_name            = "standard"
@@ -94,7 +110,7 @@ resource "azurerm_key_vault" "key-vault" {
   network_acls {
     bypass                     = "AzureServices"
     default_action             = "Deny"
-    virtual_network_subnet_ids = [var.web-app-subnet-id]
+    virtual_network_subnet_ids = [var.db-subnet-id]
   }
 }
 

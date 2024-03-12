@@ -16,6 +16,6 @@ variable "sql_server_password" {
   sensitive = true
 }
 
-variable "web-app-subnet-id" {
+variable "db-subnet-id" {
   type = string
 }

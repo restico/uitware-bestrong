@@ -25,6 +25,10 @@ variable "web-app-subnet-id" {
   type = string
 }
 
+variable "db-subnet-id" {
+  type = string
+}
+
 variable "container-registry-name" {
   type    = string
   default = "containerregistrytflab"

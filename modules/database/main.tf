@@ -20,7 +20,7 @@ resource "azurerm_private_endpoint" "database-server_private_endpoint" {
   name                = "DatabasePrivateEndpoint"
   location            = var.az_region
   resource_group_name = var.az_rg_name
-  subnet_id           = var.web-app-subnet-id
+  subnet_id           = var.db-subnet-id
 
   private_service_connection {
     name                           = "DatabasePrivateServiceConnection"

@@ -5,3 +5,7 @@ output "vnet_name" {
 output "subnet_id" {
   value = azurerm_subnet.vnet-subnet.id
 }
+
+output "db_subnet_id" {
+  value = azurerm_subnet.vnet-db-subnet.id
+}
