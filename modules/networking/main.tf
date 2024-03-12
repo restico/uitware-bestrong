@@ -43,4 +43,15 @@ resource "azurerm_subnet" "vnet-subnet" {
   resource_group_name  = var.az_rg_name
   virtual_network_name = azurerm_virtual_network.virtual-network.name
   address_prefixes     = ["192.168.0.0/24"]
+
+  delegation {
+    name = "delegation"
+    service_delegation {
+      name    = "Microsoft.Web/serverFarms"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
+    }
+  }
+  service_endpoints = ["Microsoft.KeyVault"]
+
+  private_endpoint_network_policies_enabled = true
 }

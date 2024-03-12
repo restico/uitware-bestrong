@@ -19,6 +19,8 @@ module "app-service" {
 
   web-app-name      = "uitware-tflab-web-app"
   web-app-subnet-id = module.networking.subnet_id
+
+  tenant-id = var.tenant-id
 }
 
 module "database" {
@@ -27,8 +29,8 @@ module "database" {
   az_rg_name = data.azurerm_resource_group.uitware-tflab-rg.name
   az_region  = data.azurerm_resource_group.uitware-tflab-rg.location
 
-  sql_server_login    = var.sql_server_login
-  sql_server_password = var.sql_server_password
+  sql_server_login    = var.sql-server-user
+  sql_server_password = var.sql-server-password
 
   web-app-subnet-id = module.networking.subnet_id
 }

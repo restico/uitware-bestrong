@@ -84,3 +84,22 @@ resource "azurerm_role_assignment" "web-service-acr-pull" {
   principal_id         = azurerm_linux_web_app.linux-web-app.identity[0].principal_id
 }
 
+resource "azurerm_key_vault" "key-vault" {
+  name                = "examplekvor13"
+  location            = var.az_region
+  resource_group_name = var.az_rg_name
+  sku_name            = "standard"
+  tenant_id           = var.tenant-id
+
+  network_acls {
+    bypass                     = "AzureServices"
+    default_action             = "Deny"
+    virtual_network_subnet_ids = [var.web-app-subnet-id]
+  }
+}
+
+resource "azurerm_role_assignment" "key-vault-role-assginment" {
+  scope                = azurerm_key_vault.key-vault.id
+  role_definition_name = "Key Vault Upload"
+  principal_id         = azurerm_linux_web_app.linux-web-app.identity[0].principal_id
+}

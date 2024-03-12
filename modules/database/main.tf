@@ -23,7 +23,7 @@ resource "azurerm_private_endpoint" "database-server_private_endpoint" {
   subnet_id           = var.web-app-subnet-id
 
   private_service_connection {
-    name                           = "DatabaseprivateServiceConnection"
+    name                           = "DatabasePrivateServiceConnection"
     private_connection_resource_id = azurerm_mssql_server.database-server.id
     is_manual_connection           = false
     subresource_names              = ["sqlServer"]

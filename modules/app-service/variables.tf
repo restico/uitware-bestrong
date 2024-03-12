@@ -34,3 +34,8 @@ variable "acr_sku" {
   type    = string
   default = "Basic"
 }
+
+variable "tenant-id" {
+  type      = string
+  sensitive = true
+}
