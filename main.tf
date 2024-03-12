@@ -22,6 +22,7 @@ module "app-service" {
   db-subnet-id      = module.networking.db_subnet_id
 
   tenant-id = var.tenant-id
+  client-id = var.client-id
 }
 
 module "database" {

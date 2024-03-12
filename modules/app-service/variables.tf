@@ -40,6 +40,9 @@ variable "acr_sku" {
 }
 
 variable "tenant-id" {
-  type      = string
-  sensitive = true
+  type = string
+}
+
+variable "client-id" {
+  type = string
 }

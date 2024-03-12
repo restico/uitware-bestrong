@@ -7,6 +7,7 @@ resource "azurerm_storage_account" "web-app-storage-account" {
 }
 
 resource "azurerm_private_endpoint" "storage_private_endpoint" {
+  depends_on = [ azurerm_linux_web_app.linux-web-app ]
   name                = "storage-endpoint"
   location            = var.az_region
   resource_group_name = var.az_rg_name
@@ -32,6 +33,7 @@ resource "azurerm_service_plan" "service-plan" {
 }
 
 resource "azurerm_linux_web_app" "linux-web-app" {
+  depends_on = [ azurerm_service_plan.service-plan ]
   name                = var.web-app-name
   resource_group_name = var.az_rg_name
   location            = var.az_region
@@ -100,8 +102,8 @@ resource "azurerm_role_assignment" "web-service-acr-pull" {
   principal_id         = azurerm_linux_web_app.linux-web-app.identity[0].principal_id
 }
 
-resource "azurerm_key_vault" "key-vault" {
-  name                = "key-vault-for-lab"
+resource "azurerm_key_vault" "test-key-vault" {
+  name                = "test-kv-restico-tflab"
   location            = var.az_region
   resource_group_name = var.az_rg_name
   sku_name            = "standard"
@@ -112,10 +114,25 @@ resource "azurerm_key_vault" "key-vault" {
     default_action             = "Deny"
     virtual_network_subnet_ids = [var.db-subnet-id]
   }
+
+  access_policy {
+    tenant_id = var.tenant-id
+    object_id = var.client-id
+
+    secret_permissions = [
+      "Get", "List", "Set", "Delete"
+    ]
+    key_permissions = [
+      "Get", "List", "Create", "Delete"
+    ]
+    storage_permissions = [
+      "Get", "List", "Set", "Delete"
+    ]
+  }
 }
 
 resource "azurerm_role_assignment" "key-vault-role-assginment" {
-  scope                = azurerm_key_vault.key-vault.id
-  role_definition_name = "Key Vault Upload"
+  scope                = azurerm_key_vault.test-key-vault.id
+  role_definition_name = "Key Vault Contributor"
   principal_id         = azurerm_linux_web_app.linux-web-app.identity[0].principal_id
 }

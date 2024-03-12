@@ -1,5 +1,5 @@
 resource "azurerm_mssql_server" "database-server" {
-  name                         = "bestrongsqlserver123"
+  name                         = "tflab-bestrongserver"
   resource_group_name          = var.az_rg_name
   location                     = var.az_region
   version                      = "12.0"
@@ -11,11 +11,12 @@ resource "azurerm_mssql_database" "database-server_db" {
   name        = "bestrongdatabase"
   server_id   = azurerm_mssql_server.database-server.id
   sku_name    = "S0"
-  max_size_gb = 2
+  max_size_gb = 4
+  zone_redundant = false
+  storage_account_type = "Local"
 }
 
 
-# Private Endpoint for SQL Server
 resource "azurerm_private_endpoint" "database-server_private_endpoint" {
   name                = "DatabasePrivateEndpoint"
   location            = var.az_region
