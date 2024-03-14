@@ -1,48 +1,61 @@
-variable "az_rg_name" {
+variable "bestrong-rg" {
   type = string
 }
 
-variable "az_region" {
+variable "bestrong-region" {
   type = string
 }
 
-variable "app-service-plan-name" {
+variable "bestrong-service_plan-name" {
   type    = string
-  default = "uitware-tflab-app-service-plan"
+  default = "service-plan-bestrong-francecentral"
 }
 
-variable "app-srv-sku" {
+variable "bestrong-service_plan-sku" {
   type    = string
   default = "F1"
 }
 
-variable "web-app-name" {
+variable "bestrong-web_app-name" {
   type    = string
-  default = "uitware-tflab-web-app"
+  default = "web-app-bestrong-francecentral"
 }
 
-variable "web-app-subnet-id" {
+variable "bestrong-web_app-subnet_id" {
   type = string
 }
 
-variable "db-subnet-id" {
-  type = string
-}
-
-variable "container-registry-name" {
+variable "bestrong-log_analytics_workspace-name" {
   type    = string
-  default = "containerregistrytflab"
+  default = "log-analytics-bestrong-francecentral"
 }
 
-variable "acr_sku" {
+variable "bestrong-application_insights_name" {
   type    = string
-  default = "Basic"
+  default = "app_insights-bestrong-francecentral"
 }
 
-variable "tenant-id" {
-  type = string
+variable "bestrong-web_app-storage_name" {
+  description = "Web App Storage Be Strong Restico"
+  type        = string
+  default     = "wastoragebsrestico"
 }
 
-variable "client-id" {
+variable "bestrong-web_app-storage_tier" {
+  type    = string
+  default = "Standard"
+}
+
+variable "bestrong-web_app-storage_replication" {
+  type    = string
+  default = "LRS"
+}
+
+variable "bestrong-web_app-storage_private_endpoint_name" {
+  type    = string
+  default = "bestrong-web_app_storage-private_endpoint"
+}
+
+variable "bestrong-database-subnet_id" {
   type = string
 }

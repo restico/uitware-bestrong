@@ -6,9 +6,11 @@ terraform {
     }
   }
   backend "azurerm" {
-    resource_group_name  = "uitware-tflab-rg"
-    storage_account_name = "uitwaretflabstorage"
-    container_name       = "remote-state-container"
+    # This resources shoud be created before running this configuration
+    # (storage name and resource group name may be changed)
+    resource_group_name  = "rg-bestrong-francecentral"
+    storage_account_name = "sabestrongtfstate"
+    container_name       = "bestrong-tfstate"
     key                  = "terraform.tfstate"
   }
 }

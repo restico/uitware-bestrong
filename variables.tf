@@ -1,33 +1,31 @@
-variable "tenant-id" {
-  description = "The Azure Tenant ID"
+variable "bestrong-cliend-id" {
+  description = "The client ID of the Azure Entra ID application"
+  type        = string
+}
+
+variable "bestrong-client-secret" {
+  description = "The client secret of the Azure Entra ID application"
   type        = string
   sensitive   = true
 }
 
-variable "sql-server-user" {
-  description = "Username to SQL Server"
+variable "bestrong-tenant-id" {
+  description = "The tenant ID of the Azure Entra ID application"
   type        = string
-  sensitive   = true
-}
-variable "sql-server-password" {
-  description = "Password to the MS SQL Server"
-  type        = string
-  sensitive   = true
-}
-variable "client-id" {
-  description = "The Azure Client ID"
-  type        = string
-  sensitive   = true
 }
 
-variable "client-secret" {
+variable "bestrong-subscription-id" {
+  description = "The subscription ID of the Azure Entra ID application"
   type        = string
-  description = "The Azure Client Secret"
-  sensitive   = true
 }
 
-variable "subscription-id" {
-  description = "The Azure Subscription ID"
+variable "mssql-admin-username" {
+  description = "The username of the SQL Server administrator"
+  type        = string
+}
+
+variable "mssql-admin-password" {
+  description = "The password of the SQL Server administrator"
   type        = string
   sensitive   = true
 }

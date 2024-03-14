@@ -1,43 +1,33 @@
-resource "azurerm_storage_account" "web-app-storage-account" {
-  name                     = "webappstoracctflab"
-  resource_group_name      = var.az_rg_name
-  location                 = var.az_region
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-}
-
-resource "azurerm_private_endpoint" "storage_private_endpoint" {
-  depends_on = [ azurerm_linux_web_app.linux-web-app ]
-  name                = "storage-endpoint"
-  location            = var.az_region
-  resource_group_name = var.az_rg_name
-  subnet_id           = var.db-subnet-id
-
-  private_service_connection {
-    name                           = "storage-connection"
-    private_connection_resource_id = azurerm_storage_account.web-app-storage-account.id
-    subresource_names              = ["blob"]
-    is_manual_connection           = false
-  }
-}
-
-resource "azurerm_service_plan" "service-plan" {
-  name                = var.app-service-plan-name
-  location            = var.az_region
-  resource_group_name = var.az_rg_name
-
-  os_type  = "Linux"
-  sku_name = var.app-srv-sku
+resource "azurerm_service_plan" "bestrong-service-plan" {
+  name                = var.bestrong-service_plan-name
+  location            = var.bestrong-region
+  resource_group_name = var.bestrong-rg
+  sku_name            = var.bestrong-service_plan-sku
+  os_type             = "Linux"
 
   zone_balancing_enabled = false
 }
 
-resource "azurerm_linux_web_app" "linux-web-app" {
-  depends_on = [ azurerm_service_plan.service-plan ]
-  name                = var.web-app-name
-  resource_group_name = var.az_rg_name
-  location            = var.az_region
-  service_plan_id     = azurerm_service_plan.service-plan.id
+resource "azurerm_linux_web_app" "bestrong-web_app" {
+  depends_on = [
+    azurerm_service_plan.bestrong-service-plan,
+    azurerm_application_insights.bestrong_application_insights,
+    azurerm_storage_account.bestrong-web_app-storage
+  ]
+
+  name                      = var.bestrong-web_app-name
+  resource_group_name       = var.bestrong-rg
+  location                  = var.bestrong-region
+  service_plan_id           = azurerm_service_plan.bestrong-service-plan.id
+  virtual_network_subnet_id = var.bestrong-web_app-subnet_id
+
+  storage_account {
+    name         = "bestrong-web-app-fileshare"
+    account_name = azurerm_storage_account.bestrong-web_app-storage.name
+    access_key   = azurerm_storage_account.bestrong-web_app-storage.primary_access_key
+    type         = "AzureFiles"
+    share_name   = "bestrong-web-app-files"
+  }
 
   site_config {
     application_stack {
@@ -51,88 +41,46 @@ resource "azurerm_linux_web_app" "linux-web-app" {
   }
 
   app_settings = {
-    "APP_INSIGHTS_INSTRUMENTATION_KEY"           = azurerm_application_insights.web-app-insights.instrumentation_key
-    "APPLICATIONINSIGHTS_CONNECTION_STRING"      = azurerm_application_insights.web-app-insights.connection_string
-    "ApplicationInsightsAgent_EXTENSION_VERSION" = "~3"
-
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.bestrong_application_insights.instrumentation_key
   }
-
-  storage_account {
-    access_key   = azurerm_storage_account.web-app-storage-account.primary_access_key
-    account_name = azurerm_storage_account.web-app-storage-account.name
-    name         = "fileshare"
-    share_name   = "fileshare"
-    type         = "AzureFiles"
-    mount_path   = "/fileshare"
-  }
-
-  virtual_network_subnet_id = var.web-app-subnet-id
 }
 
-resource "azurerm_log_analytics_workspace" "web-app-logs-workspace" {
-  name                = "web-app-logs-workspace"
-  location            = var.az_region
-  resource_group_name = var.az_rg_name
+resource "azurerm_log_analytics_workspace" "bestrong-log_analytics_workspace" {
+  name                = var.bestrong-log_analytics_workspace-name
+  location            = var.bestrong-region
+  resource_group_name = var.bestrong-rg
   sku                 = "PerGB2018"
 }
 
-resource "azurerm_application_insights" "web-app-insights" {
-  name                = "${var.web-app-name}-insights"
-  location            = var.az_region
-  resource_group_name = var.az_rg_name
-  workspace_id        = azurerm_log_analytics_workspace.web-app-logs-workspace.id
+resource "azurerm_application_insights" "bestrong_application_insights" {
+  depends_on = [azurerm_log_analytics_workspace.bestrong-log_analytics_workspace]
+
+  name                = var.bestrong-application_insights_name
+  location            = var.bestrong-region
+  resource_group_name = var.bestrong-rg
   application_type    = "web"
 }
 
-resource "azurerm_app_service_virtual_network_swift_connection" "webapp-vnet-integration" {
-  app_service_id = azurerm_linux_web_app.linux-web-app.id
-  subnet_id      = var.web-app-subnet-id
+resource "azurerm_storage_account" "bestrong-web_app-storage" {
+  name                          = var.bestrong-web_app-storage_name
+  location                      = var.bestrong-region
+  resource_group_name           = var.bestrong-rg
+  account_tier                  = var.bestrong-web_app-storage_tier
+  account_replication_type      = var.bestrong-web_app-storage_replication
+  public_network_access_enabled = false
 }
 
-resource "azurerm_container_registry" "container-registry" {
-  name                = var.container-registry-name
-  resource_group_name = var.az_rg_name
-  location            = var.az_region
-  sku                 = var.acr_sku
-}
+resource "azurerm_private_endpoint" "bestrong-web_app_storage-private_endpoint" {
+  depends_on          = [azurerm_storage_account.bestrong-web_app-storage]
+  name                = var.bestrong-web_app-storage_private_endpoint_name
+  location            = var.bestrong-region
+  resource_group_name = var.bestrong-rg
+  subnet_id           = var.bestrong-database-subnet_id
 
-resource "azurerm_role_assignment" "web-service-acr-pull" {
-  scope                = azurerm_container_registry.container-registry.id
-  role_definition_name = "AcrPull"
-  principal_id         = azurerm_linux_web_app.linux-web-app.identity[0].principal_id
-}
-
-resource "azurerm_key_vault" "test-key-vault" {
-  name                = "test-kv-restico-tflab"
-  location            = var.az_region
-  resource_group_name = var.az_rg_name
-  sku_name            = "standard"
-  tenant_id           = var.tenant-id
-
-  network_acls {
-    bypass                     = "AzureServices"
-    default_action             = "Deny"
-    virtual_network_subnet_ids = [var.db-subnet-id]
+  private_service_connection {
+    name                           = "bestrong-web_app_storage-private_service_connection"
+    is_manual_connection           = false
+    private_connection_resource_id = azurerm_storage_account.bestrong-web_app-storage.id
+    subresource_names              = ["blob"]
   }
-
-  access_policy {
-    tenant_id = var.tenant-id
-    object_id = var.client-id
-
-    secret_permissions = [
-      "Get", "List", "Set", "Delete"
-    ]
-    key_permissions = [
-      "Get", "List", "Create", "Delete"
-    ]
-    storage_permissions = [
-      "Get", "List", "Set", "Delete"
-    ]
-  }
-}
-
-resource "azurerm_role_assignment" "key-vault-role-assginment" {
-  scope                = azurerm_key_vault.test-key-vault.id
-  role_definition_name = "Key Vault Contributor"
-  principal_id         = azurerm_linux_web_app.linux-web-app.identity[0].principal_id
 }
