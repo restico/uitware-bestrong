@@ -1,17 +1,17 @@
-data "azurerm_resource_group" "rg-bestrong-westeurope" {
+data "azurerm_resource_group" "rg-bestrong" {
   name = "rg-bestrong-francecentral"
 }
 
 module "network" {
   source          = "./modules/network"
-  bestrong-rg     = data.azurerm_resource_group.rg-bestrong-westeurope.name
-  bestrong-region = data.azurerm_resource_group.rg-bestrong-westeurope.location
+  bestrong-rg     = data.azurerm_resource_group.rg-bestrong.name
+  bestrong-region = data.azurerm_resource_group.rg-bestrong.location
 }
 
 module "app-service" {
   source          = "./modules/app-service"
-  bestrong-rg     = data.azurerm_resource_group.rg-bestrong-westeurope.name
-  bestrong-region = data.azurerm_resource_group.rg-bestrong-westeurope.location
+  bestrong-rg     = data.azurerm_resource_group.rg-bestrong.name
+  bestrong-region = data.azurerm_resource_group.rg-bestrong.location
 
   bestrong-service_plan-sku   = "S1"
   bestrong-web_app-subnet_id  = module.network.web_app-subnet_id
@@ -20,8 +20,8 @@ module "app-service" {
 
 module "database" {
   source          = "./modules/storage"
-  bestrong-rg     = data.azurerm_resource_group.rg-bestrong-westeurope.name
-  bestrong-region = data.azurerm_resource_group.rg-bestrong-westeurope.location
+  bestrong-rg     = data.azurerm_resource_group.rg-bestrong.name
+  bestrong-region = data.azurerm_resource_group.rg-bestrong.location
 
   bestrong-mssql-admin_username = var.mssql-admin-username
   bestrong-mssql-admin_password = var.mssql-admin-password
