@@ -6,6 +6,9 @@ trigger:
 
 pool:
   name: Self-Hosted
+  demands: 
+  - Terraform
+  - AzCLI
 
 variables:
   - group: bestrong-secrets
@@ -17,5 +20,21 @@ jobs:
       - checkout: self
         displayName: Repository checkout
 
-      - script: echo "Hello, $(mssql-admin-username)!"
-        displayName: 'Run a one-line script'
+      - script: |
+          terraform init
+          terraform validate
+          terraform apply -auto-approve \
+          -var "mssql-admin-username=$MSSQL_ADMIN_USERNAME" \
+          -var "mssql-admin-password=$MSSQL_ADMIN_PASSWORD" \
+          -var "bestrong-client-id=$ARM_CLIENT_ID" \
+          -var "bestrong-client-secret=$ARM_CLIENT_SECRET" \
+          -var "bestrong-tenant-id=$ARM_TENANT_ID" \
+          -var "bestrong-subscription-id=$ARM_SUBSCRIPTION_ID"
+        displayName: 'Running terraform plan to test configuration'
+        env:
+          ARM_CLIENT_ID: $(bestrong-client-id)
+          ARM_CLIENT_SECRET: $(bestrong-client-secret)
+          ARM_TENANT_ID: $(bestrong-tenant-id)
+          ARM_SUBSCRIPTION_ID: $(bestrong-subscription-id)
+          MSSQL_ADMIN_USERNAME: $(mssql-admin-username)
+          MSSQL_ADMIN_PASSWORD: $(mssql-admin-password)
