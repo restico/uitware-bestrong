@@ -4,6 +4,8 @@ trigger:
     include:
       - main
 
+pr: none
+
 pool:
   name: Self-Hosted
   demands: 
