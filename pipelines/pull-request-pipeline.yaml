@@ -1,3 +1,5 @@
+trigger: none
+
 pr:
   - main
 
@@ -20,7 +22,7 @@ jobs:
       - script: |
           terraform init
           terraform validate
-          terraform plan -var "mssql-admin-username=$(mysql-admin-username)" -var "mssql-admin-password=$(mysql-admin-password)"
+          terraform plan -var "mssql-admin-username=$MYSQL_ADMIN_USERNAME" -var "mssql-admin-password=$MYSQL_ADMIN_PASSWORD"
         displayName: 'Running terraform plan to test configuration'
         env:
           ARM_CLIENT_ID: $(bestrong-cliend-id)
