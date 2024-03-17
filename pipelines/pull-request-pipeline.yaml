@@ -20,6 +20,7 @@ jobs:
         displayName: Repository checkout
 
       - script: |
+          terraform --version
           terraform init
           terraform validate
           terraform plan \
