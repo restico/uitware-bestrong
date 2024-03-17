@@ -32,7 +32,7 @@ jobs:
           -var "bestrong-client-secret=$ARM_CLIENT_SECRET" \
           -var "bestrong-tenant-id=$ARM_TENANT_ID" \
           -var "bestrong-subscription-id=$ARM_SUBSCRIPTION_ID"
-        displayName: 'Running terraform plan to test configuration'
+        displayName: 'Deploying infrastructure with Terraform'
         env:
           ARM_CLIENT_ID: $(bestrong-client-id)
           ARM_CLIENT_SECRET: $(bestrong-client-secret)
