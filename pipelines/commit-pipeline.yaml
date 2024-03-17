@@ -1,0 +1,18 @@
+trigger:
+  batch: true
+  branches:
+    includes:
+      - main
+    
+pool:
+  name: Self-Hosted
+
+variables:
+  - group: bestrong-secrets
+
+steps:
+  - checkout: self
+    displayName: Repository checkout
+
+  - script: echo "Hello, $(variables.mssql-admin-username)!"
+    displayName: 'Run a one-line script'
