@@ -3,8 +3,10 @@ pr:
 
 pool:
   name: Self-Hosted
-  demands: Terraform
-
+  demands: 
+  - Terraform
+  - AzCLI
+  
 variables:
   - group: bestrong-secrets
 

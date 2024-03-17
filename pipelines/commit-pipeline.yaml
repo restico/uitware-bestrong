@@ -6,7 +6,9 @@ trigger:
 
 pool:
   name: Self-Hosted
-  demands: Terraform
+  demands: 
+  - Terraform
+  - AzCLI
 
 variables:
   - group: bestrong-secrets
@@ -19,10 +21,8 @@ jobs:
         displayName: Repository checkout
 
       - script: |
-          ls
-          pwd
+          echo $(mssql-admin-username)
+          az login --service-principal -u $(bestrong-cliend-id) -p $(bestrong-client-secret) -t $(bestrong-tenant-id)
           terraform init
-          echo $MYSQL_USER
+          
         displayName: 'Run a one-line script'
-        env:
-          MYSQL_USER: $(mssql-admin-username)
