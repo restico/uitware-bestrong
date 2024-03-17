@@ -6,6 +6,7 @@ trigger:
 
 pool:
   name: Self-Hosted
+  demands: Terraform
 
 variables:
   - group: bestrong-secrets
