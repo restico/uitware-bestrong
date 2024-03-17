@@ -1,16 +1,29 @@
+| BeStrong Commit Pipeline | BeStrong Pull Request Pipeline |
+|--|--|
+| [![Build Status](https://dev.azure.com/restico-devops/BeStrong/_apis/build/status%2FBeStrong%20Commit%20Pipeline?branchName=main)](https://dev.azure.com/restico-devops/BeStrong/_build/latest?definitionId=8&branchName=main) | [![Build Status](https://dev.azure.com/restico-devops/BeStrong/_apis/build/status%2FBeStrong%20Pull%20Request%20Pipeline?branchName=main)](https://dev.azure.com/restico-devops/BeStrong/_build/latest?definitionId=7&branchName=main) |
+
 Tasks: 
 
 1) Write Terraform code for configuration of the following bunch of resources:
 
-1 App Service Plan
-1 App Service - integrate with VNet, enable System Managed Identity
-1 Application Insights - linked to App Service
-1 ACR - Azure Container Registry, grant App Service Identity access to it
-1 Key Vault - grant permissions to App Service Identity, integrate with VNet
-1 VNet
-1 MS SQL Server DB - Private Endpoint needs to be configured
-1 Storage account - configure Private Endpoint with VNET and mount Fileshare to App Service
-1 Storage account for Terraform state
+- App Service Plan
+- App Service
+  - Integrate with VNet
+  - Enable System Managed Identity
+- Application Insights
+  - Linked to App Service
+- Azure Container Registry (ACR)
+  - Grant App Service Identity access to it
+- Key Vault
+  - Grant permissions to App Service Identity
+  - Integrate with VNet
+- VNet
+- MS SQL Server DB
+  - Private Endpoint needs to be configured
+- Storage account
+  - Configure Private Endpoint with VNET
+  - Mount Fileshare to App Service
+- Storage account for Terraform state
 
 2) Terraform state should be stored in remote backend - Azure storage account.
 
