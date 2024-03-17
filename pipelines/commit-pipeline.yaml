@@ -18,5 +18,11 @@ jobs:
       - checkout: self
         displayName: Repository checkout
 
-      - script: echo "Hello, $(mssql-admin-username)!"
+      - script: |
+          ls
+          pwd
+          terraform init
+          echo $MYSQL_USER
         displayName: 'Run a one-line script'
+        env:
+          MYSQL_USER: $(mssql-admin-username)
