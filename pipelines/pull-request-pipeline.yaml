@@ -7,9 +7,12 @@ pool:
 variables:
   - group: bestrong-secrets
 
-steps:
-  - checkout: self
-    displayName: Repository checkout
+jobs:
+  - job:
+    displayName: Terraform validation
+    steps:
+      - checkout: self
+        displayName: Repository checkout
 
-  - script: echo "Hello, ${{variables.mssql-admin-username}}!"
-    displayName: 'Run a one-line script'
+      - script: echo "Hello, ${{variables.mssql-admin-username}}!"
+        displayName: 'Run a one-line script'
