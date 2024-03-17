@@ -6,7 +6,7 @@ pool:
   demands: 
   - Terraform
   - AzCLI
-  
+
 variables:
   - group: bestrong-secrets
 
@@ -17,5 +17,13 @@ jobs:
       - checkout: self
         displayName: Repository checkout
 
-      - script: echo "Hello, $(mssql-admin-username)!"
-        displayName: 'Run a one-line script'
+      - script: |
+          terraform init
+          terraform validate
+          terraform plan -var "mssql-admin-username=$(mysql-admin-username)" -var "mssql-admin-password=$(mysql-admin-password)"
+        displayName: 'Running terraform plan to test configuration'
+        env:
+          ARM_CLIENT_ID: $(bestrong-cliend-id)
+          ARM_CLIENT_SECRET: $(bestrong-client-secret)
+          ARM_TENANT_ID: $(bestrong-tenant-id)
+          ARM_SUBSCRIPTION_ID: $(bestrong-subscription-id)

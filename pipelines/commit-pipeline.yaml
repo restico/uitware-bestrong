@@ -23,7 +23,8 @@ jobs:
       - script: |
           terraform init
           terraform validate
-        displayName: 'Run a one-line script'
+          terraform apply -auto-approve -var "mssql-admin-username=$(mysql-admin-username)" -var "mssql-admin-password=$(mysql-admin-password)"
+        displayName: 'Running terraform commands, deploying infrastructure'
         env:
           ARM_CLIENT_ID: $(bestrong-cliend-id)
           ARM_CLIENT_SECRET: $(bestrong-client-secret)
