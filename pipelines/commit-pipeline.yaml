@@ -21,8 +21,11 @@ jobs:
         displayName: Repository checkout
 
       - script: |
-          echo $(mssql-admin-username)
-          az login --service-principal -u $(bestrong-cliend-id) -p $(bestrong-client-secret) -t $(bestrong-tenant-id)
           terraform init
-          
+          terraform validate
         displayName: 'Run a one-line script'
+        env:
+          ARM_CLIENT_ID: $(bestrong-cliend-id)
+          ARM_CLIENT_SECRET: $(bestrong-client-secret)
+          ARM_TENANT_ID: $(bestrong-tenant-id)
+          ARM_SUBSCRIPTION_ID: $(bestrong-subscription-id)
