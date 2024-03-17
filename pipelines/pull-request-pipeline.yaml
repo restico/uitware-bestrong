@@ -14,5 +14,5 @@ jobs:
       - checkout: self
         displayName: Repository checkout
 
-      - script: echo "Hello, ${{variables.mssql-admin-username}}!"
+      - script: echo "Hello, $(mssql-admin-username)!"
         displayName: 'Run a one-line script'
