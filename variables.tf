@@ -1,4 +1,4 @@
-variable "bestrong-cliend-id" {
+variable "bestrong-client-id" {
   description = "The client ID of the Azure Entra ID application"
   type        = string
 }
