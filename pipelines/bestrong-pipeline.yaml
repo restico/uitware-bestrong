@@ -1,0 +1,76 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+
+pr:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - group: bestrong-secrets
+
+jobs:
+  - job:
+    displayName: Terraform deployment
+    steps:
+      - checkout: self
+        displayName: Repository checkout
+
+      - task: TerraformInstaller@1
+        displayName: Install Terraform
+        inputs:
+          terraformVersion: 1.7.5
+
+      - task: TerraformTaskV4@4
+        displayName: Terraform init
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          backendServiceArm: "bestrong-wif-connect"
+          backendAzureRmResourceGroupName: $(bestrong-backend-rg)
+          backendAzureRmStorageAccountName: $(betsrong-backend-sa)
+          backendAzureRmContainerName: $(bestrong-backend-container)
+          backendAzureRmKey: $(bestrong-backend-key)
+        
+      - task: TerraformTaskV4@4
+        displayName: Terraform validate
+        inputs:
+          provider: 'azurerm'
+          command: 'validate'
+          environmentServiceNameAzureRM: 'bestrong-wif-connect'
+
+      - task: TerraformTaskV4@4
+        displayName: Terraform plan
+        condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.Reason'], 'Manual'))
+        inputs:
+          provider: 'azurerm'
+          command: 'plan'
+          environmentServiceNameAzureRM: 'bestrong-wif-connect'
+          commandOptions: |
+            '-out=bestrong.tfplan \
+            -var "mssql-admin-username=$MSSQL_ADMIN_USERNAME" \
+            -var "mssql-admin-password=$MSSQL_ADMIN_PASSWORD" \
+            -var "bestrong-client-id=$ARM_CLIENT_ID" \
+            -var "bestrong-client-secret=$ARM_CLIENT_SECRET" \
+            -var "bestrong-tenant-id=$ARM_TENANT_ID" \
+            -var "bestrong-subscription-id=$ARM_SUBSCRIPTION_ID"'
+
+      - task: TerraformTaskV4@4
+        displayName: Terraform apply
+        condition: and(eq(variables['Build.Reason'], 'BatchedCI'), eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
+          environmentServiceNameAzureRM: 'bestrong-wif-connect'
+          commandOptions: |
+            'bestrong.tfplan \
+            -var "mssql-admin-username=$MSSQL_ADMIN_USERNAME" \
+            -var "mssql-admin-password=$MSSQL_ADMIN_PASSWORD" \
+            -var "bestrong-client-id=$ARM_CLIENT_ID" \
+            -var "bestrong-client-secret=$ARM_CLIENT_SECRET" \
+            -var "bestrong-tenant-id=$ARM_TENANT_ID" \
+            -var "bestrong-subscription-id=$ARM_SUBSCRIPTION_ID"'
