@@ -54,7 +54,7 @@ jobs:
           provider: 'azurerm'
           command: 'plan'
           environmentServiceNameAzureRM: 'bestrong-wif-connect'
-          commandOptions: '-var="mssql-admin-username=$MSSQL_ADMIN_USERNAME" -var="mssql-admin-password=$MSSQL_ADMIN_PASSWORD" -var="bestrong-client-id=$(arm_client_id)" -var="bestrong-client-secret=$(arm_client_secret)" -var="bestrong-tenant-id=$(arm_tenant_id)" -var="bestrong-subscription-id=$(arm_subscription_id)"'
+          commandOptions: '-var="mssql-admin-username=$MSSQL-ADMIN-USERNAME" -var="mssql-admin-password=$(mssql-admin-password)" -var="bestrong-client-id=$(arm_client_id)" -var="bestrong-client-secret=$(arm_client_secret)" -var="bestrong-tenant-id=$(arm_tenant_id)" -var="bestrong-subscription-id=$(arm_subscription_id)"'
 
       - task: TerraformTaskV4@4
         displayName: Terraform apply
@@ -63,4 +63,4 @@ jobs:
           provider: 'azurerm'
           command: 'apply'
           environmentServiceNameAzureRM: 'bestrong-wif-connect'
-          commandOptions: '-var="mssql-admin-username=$MSSQL_ADMIN_USERNAME" -var="mssql-admin-password=$MSSQL_ADMIN_PASSWORD" -var="bestrong-client-id=$(arm_client_id)" -var="bestrong-client-secret=$(arm_client_secret)" -var="bestrong-tenant-id=$(arm_tenant_id)" -var="bestrong-subscription-id=$(arm_subscription_id)"'
+          commandOptions: '-var="mssql-admin-username=$MSSQL-ADMIN-USERNAME" -var="mssql-admin-password=$(mssql-admin-password)" -var="bestrong-client-id=$(arm_client_id)" -var="bestrong-client-secret=$(arm_client_secret)" -var="bestrong-tenant-id=$(arm_tenant_id)" -var="bestrong-subscription-id=$(arm_subscription_id)"'
