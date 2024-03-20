@@ -45,7 +45,7 @@ jobs:
 
       - task: TerraformTaskV4@4
         displayName: Terraform plan
-        condition: and(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.Reason'], 'Manual'))
+        condition: or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.Reason'], 'Manual'))
         inputs:
           provider: 'azurerm'
           command: 'plan'
@@ -61,7 +61,7 @@ jobs:
 
       - task: TerraformTaskV4@4
         displayName: Terraform apply
-        condition: and(eq(variables['Build.Reason'], 'BatchedCI'), eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))
+        condition: or(eq(variables['Build.Reason'], 'BatchedCI'), eq(variables['Build.Reason'], 'IndividualCI'))
         inputs:
           provider: 'azurerm'
           command: 'apply'
