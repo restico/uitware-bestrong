@@ -1,6 +1,6 @@
-| BeStrong Commit Pipeline | BeStrong Pull Request Pipeline |
-|--|--|
-| [![Build Status](https://dev.azure.com/restico-devops/BeStrong/_apis/build/status%2FBeStrong%20Commit%20Pipeline?branchName=main)](https://dev.azure.com/restico-devops/BeStrong/_build/latest?definitionId=8&branchName=main) | [![Build Status](https://dev.azure.com/restico-devops/BeStrong/_apis/build/status%2FBeStrong%20Pull%20Request%20Pipeline?branchName=main)](https://dev.azure.com/restico-devops/BeStrong/_build/latest?definitionId=7&branchName=main) |
+| Pipeline Name          | BeStrong Pipeline                                                                                                                |
+|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| Build Status           | [![Build Status](https://dev.azure.com/restico-devops/BeStrong/_apis/build/status%2FBeStrong%20Pipeline?branchName=main)](https://dev.azure.com/restico-devops/BeStrong/_build/latest?definitionId=9&branchName=main) |
 
 Tasks: 
 
