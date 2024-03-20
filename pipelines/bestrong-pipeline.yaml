@@ -20,6 +20,10 @@ jobs:
       - checkout: self
         displayName: Repository checkout
 
+      - script: |
+          echo $ARM_TENANT_ID
+          printenv
+
       - task: TerraformInstaller@1
         displayName: Install Terraform
         inputs:
@@ -50,14 +54,7 @@ jobs:
           provider: 'azurerm'
           command: 'plan'
           environmentServiceNameAzureRM: 'bestrong-wif-connect'
-          commandOptions: |
-            '-out=bestrong.tfplan \
-            -var "mssql-admin-username=$MSSQL_ADMIN_USERNAME" \
-            -var "mssql-admin-password=$MSSQL_ADMIN_PASSWORD" \
-            -var "bestrong-client-id=$ARM_CLIENT_ID" \
-            -var "bestrong-client-secret=$ARM_CLIENT_SECRET" \
-            -var "bestrong-tenant-id=$ARM_TENANT_ID" \
-            -var "bestrong-subscription-id=$ARM_SUBSCRIPTION_ID"'
+          commandOptions: '-var="mssql-admin-username=$MSSQL_ADMIN_USERNAME" -var="mssql-admin-password=$MSSQL_ADMIN_PASSWORD" -var="bestrong-client-id=$(arm_client_id)" -var="bestrong-client-secret=$(arm_client_secret)" -var="bestrong-tenant-id=$(arm_tenant_id)" -var="bestrong-subscription-id=$(arm_subscription_id)"'
 
       - task: TerraformTaskV4@4
         displayName: Terraform apply
@@ -66,11 +63,4 @@ jobs:
           provider: 'azurerm'
           command: 'apply'
           environmentServiceNameAzureRM: 'bestrong-wif-connect'
-          commandOptions: |
-            'bestrong.tfplan \
-            -var "mssql-admin-username=$MSSQL_ADMIN_USERNAME" \
-            -var "mssql-admin-password=$MSSQL_ADMIN_PASSWORD" \
-            -var "bestrong-client-id=$ARM_CLIENT_ID" \
-            -var "bestrong-client-secret=$ARM_CLIENT_SECRET" \
-            -var "bestrong-tenant-id=$ARM_TENANT_ID" \
-            -var "bestrong-subscription-id=$ARM_SUBSCRIPTION_ID"'
+          commandOptions: '-var="mssql-admin-username=$MSSQL_ADMIN_USERNAME" -var="mssql-admin-password=$MSSQL_ADMIN_PASSWORD" -var="bestrong-client-id=$(arm_client_id)" -var="bestrong-client-secret=$(arm_client_secret)" -var="bestrong-tenant-id=$(arm_tenant_id)" -var="bestrong-subscription-id=$(arm_subscription_id)"'
