@@ -30,11 +30,6 @@ resource "azurerm_linux_web_app" "bestrong-web_app" {
   }
 
   site_config {
-    application_stack {
-      docker_registry_url = "https://mcr.microsoft.com"
-      docker_image_name   = "appsvc/staticsite:latest"
-    }
-  }
 
   identity {
     type = "SystemAssigned"

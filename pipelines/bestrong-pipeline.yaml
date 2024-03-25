@@ -19,11 +19,7 @@ jobs:
     steps:
       - checkout: self
         displayName: Repository checkout
-
-      - script: |
-          echo $ARM_TENANT_ID
-          printenv
-
+      
       - task: TerraformInstaller@1
         displayName: Install Terraform
         inputs:
