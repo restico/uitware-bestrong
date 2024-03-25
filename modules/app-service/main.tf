@@ -29,7 +29,12 @@ resource "azurerm_linux_web_app" "bestrong-web_app" {
     share_name   = "bestrong-web-app-files"
   }
 
-  site_config {}
+  site_config {
+    application_stack {
+      docker_image_name   = "nginx:latest"
+      docker_registry_url = "https://index.docker.io"
+    }
+  }
 
   identity {
     type = "SystemAssigned"
