@@ -29,7 +29,7 @@ resource "azurerm_linux_web_app" "bestrong-web_app" {
     share_name   = "bestrong-web-app-files"
   }
 
-  site_config {
+  site_config {}
 
   identity {
     type = "SystemAssigned"
