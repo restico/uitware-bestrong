@@ -50,7 +50,7 @@ resource "azurerm_linux_web_app" "test-web-app" {
   resource_group_name = var.bestrong-rg
   location = var.bestrong-region
   service_plan_id = azurerm_service_plan.bestrong-service-plan.id
-  virtual_netowrk_subnet_id = var.bestrong-web_app-subnet_id
+  virtual_network_subnet_id = var.bestrong-web_app-subnet_id
   site_config {
     application_stack {
       docker_image_name = "nginx:latest"
