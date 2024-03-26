@@ -31,7 +31,7 @@ resource "azurerm_linux_web_app" "bestrong-web_app" {
 
   site_config {
     application_stack {
-      docker_image_name   = "nginx:latest"
+      docker_image_name   = "restico/uitware-webapisample:1.0"
       docker_registry_url = "https://index.docker.io"
     }
   }
@@ -44,6 +44,21 @@ resource "azurerm_linux_web_app" "bestrong-web_app" {
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.bestrong_application_insights.instrumentation_key
   }
 }
+
+resource "azurerm_linux_web_app" "test-web-app" {
+  name = "cool-restic-webapp-ln"
+  resource_group_name = var.bestrong-rg
+  location = var.bestrong-region
+  service_plan_id = azurerm_service_plan.bestrong-service-plan.id
+  virtual_netowrk_subnet_id = var.bestrong-web_app-subnet_id
+  site_config {
+    application_stack {
+      docker_image_name = "nginx:latest"
+      docker_registry_url = "https://index.docker.io"
+    }
+  }
+}
+
 
 resource "azurerm_log_analytics_workspace" "bestrong-log_analytics_workspace" {
   name                = var.bestrong-log_analytics_workspace-name
