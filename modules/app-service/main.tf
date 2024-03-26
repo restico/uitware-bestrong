@@ -35,14 +35,14 @@ resource "azurerm_linux_web_app" "bestrong-web_app" {
       docker_registry_url = "https://index.docker.io"
     }
   }
-
+/*
   identity {
     type = "SystemAssigned"
   }
 
   app_settings = {
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.bestrong_application_insights.instrumentation_key
-  }
+  }*/
 }
 
 resource "azurerm_linux_web_app" "test-web-app" {
@@ -51,11 +51,20 @@ resource "azurerm_linux_web_app" "test-web-app" {
   location = var.bestrong-region
   service_plan_id = azurerm_service_plan.bestrong-service-plan.id
   virtual_network_subnet_id = var.bestrong-web_app-subnet_id
+
   site_config {
     application_stack {
       docker_image_name = "nginx:latest"
       docker_registry_url = "https://index.docker.io"
     }
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+  
+  app_settings = {
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.bestrong_application_insights.instrumentation_key
   }
 }
 
