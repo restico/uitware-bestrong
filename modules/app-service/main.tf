@@ -31,14 +31,14 @@ resource "azurerm_linux_web_app" "bs-web_app" {
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.bestrong_application_insights.instrumentation_key
   }
 
-  /*storage_account {
+  storage_account {
     name         = "bestrong-web-app-fileshare"
     account_name = azurerm_storage_account.bestrong-web_app-storage.name
     access_key   = azurerm_storage_account.bestrong-web_app-storage.primary_access_key
     type         = "AzureFiles"
     share_name   = "bestrong-web-app-files"
     mount_path   = "/webappfiles"
-  }*/
+  }
 }
 
 resource "azurerm_log_analytics_workspace" "bestrong-log_analytics_workspace" {
