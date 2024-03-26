@@ -8,18 +8,27 @@ resource "azurerm_service_plan" "bestrong-service-plan" {
   zone_balancing_enabled = false
 }
 
-resource "azurerm_linux_web_app" "bestrong-web_app" {
-  depends_on = [
-    azurerm_service_plan.bestrong-service-plan,
-    azurerm_application_insights.bestrong_application_insights,
-    azurerm_storage_account.bestrong-web_app-storage
-  ]
-
+resource "azurerm_linux_web_app" "bs-web_app" {
   name                      = var.bestrong-web_app-name
   resource_group_name       = var.bestrong-rg
   location                  = var.bestrong-region
   service_plan_id           = azurerm_service_plan.bestrong-service-plan.id
   virtual_network_subnet_id = var.bestrong-web_app-subnet_id
+
+  site_config {
+    application_stack {
+      docker_image_name   = "nginx:latest"
+      docker_registry_url = "https://index.docker.io"
+    }
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  app_settings = {
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.bestrong_application_insights.instrumentation_key
+  }
 
   storage_account {
     name         = "bestrong-web-app-fileshare"
@@ -28,46 +37,7 @@ resource "azurerm_linux_web_app" "bestrong-web_app" {
     type         = "AzureFiles"
     share_name   = "bestrong-web-app-files"
   }
-
-  site_config {
-    application_stack {
-      docker_image_name   = "restico/uitware-webapisample:1.0"
-      docker_registry_url = "https://index.docker.io"
-    }
-  }
-/*
-  identity {
-    type = "SystemAssigned"
-  }
-
-  app_settings = {
-    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.bestrong_application_insights.instrumentation_key
-  }*/
 }
-
-resource "azurerm_linux_web_app" "test-web-app" {
-  name = "cool-restic-webapp-ln"
-  resource_group_name = var.bestrong-rg
-  location = var.bestrong-region
-  service_plan_id = azurerm_service_plan.bestrong-service-plan.id
-  virtual_network_subnet_id = var.bestrong-web_app-subnet_id
-
-  site_config {
-    application_stack {
-      docker_image_name = "nginx:latest"
-      docker_registry_url = "https://index.docker.io"
-    }
-  }
-
-  identity {
-    type = "SystemAssigned"
-  }
-  
-  app_settings = {
-    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.bestrong_application_insights.instrumentation_key
-  }
-}
-
 
 resource "azurerm_log_analytics_workspace" "bestrong-log_analytics_workspace" {
   name                = var.bestrong-log_analytics_workspace-name

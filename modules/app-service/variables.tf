@@ -18,7 +18,7 @@ variable "bestrong-service_plan-sku" {
 
 variable "bestrong-web_app-name" {
   type    = string
-  default = "webapp-bestrong-francecentral"
+  default = "bestrong-webapp-francecentral"
 }
 
 variable "bestrong-web_app-subnet_id" {
