@@ -9,6 +9,7 @@ resource "azurerm_service_plan" "bestrong-service-plan" {
 }
 
 resource "azurerm_linux_web_app" "bs-web_app" {
+  depends_on                = [azurerm_storage_account.bestrong-web_app-storage]
   name                      = var.bestrong-web_app-name
   resource_group_name       = var.bestrong-rg
   location                  = var.bestrong-region
@@ -36,6 +37,7 @@ resource "azurerm_linux_web_app" "bs-web_app" {
     access_key   = azurerm_storage_account.bestrong-web_app-storage.primary_access_key
     type         = "AzureFiles"
     share_name   = "bestrong-web-app-files"
+    mount_path   = "/webappfiles"
   }
 }
 

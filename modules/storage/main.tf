@@ -39,6 +39,7 @@ resource "azurerm_container_registry" "bestrong-container-registry" {
   resource_group_name = var.bestrong-rg
   location            = var.bestrong-region
   sku                 = var.bestrong-acr_sku
+  admin_enabled = true
 }
 
 resource "azurerm_role_assignment" "bestrong-acr-role-assignment" {
